@@ -132,7 +132,7 @@
 </head>
 <body>
     <div class="game-container">
-        <header class="game-header">
+        <header class="game-header compact">
             <h1 class="game-title">🎲 Career ki Snakes and Ladders</h1>
             <p class="game-subtitle">Job readiness, Decision-making, and Self-reflection through gameplay</p>
             <div class="game-stats">
@@ -145,24 +145,18 @@
         <div class="game-content">
             <div class="game-board-section">
                 <div class="board" id="gameBoard"></div>
-                
-                <div class="game-controls">
-                    <div class="dice-section">
-                        <div class="dice-container">
-                            <div class="dice" id="dice">🎲</div>
-                            <div class="dice-value" id="diceValue">-</div>
-                        </div>
-                        <button class="roll-button" id="rollButton">🎲 Roll Dice</button>
-                    </div>
-                    
-                    <div class="control-buttons">
-                        <button class="new-game-button" id="newGameButton">🔄 New Game</button>
-                        <button class="add-player-button" id="addPlayerButton">➕ Add Player</button>
-                    </div>
-                </div>
             </div>
 
             <div class="game-sidebar">
+                <div class="dice-section">
+                    <h3>🎲 Roll the Dice!</h3>
+                    <div class="dice-container">
+                        <div class="dice" id="dice">🎲</div>
+                        <div class="dice-value" id="diceValue">-</div>
+                    </div>
+                    <button class="roll-button" id="rollButton">🎲 Roll Dice</button>
+                </div>
+
                 <div class="timer-section">
                     <h3>⏰ Game Timer</h3>
                     <div class="timer" id="gameTimer">60:00</div>
@@ -191,6 +185,12 @@
                             <button class="no-evidence-button" id="noEvidenceButton">❌ No Evidence</button>
                         </div>
                     </div>
+                </div>
+
+                <div class="game-controls">
+                    <button class="new-game-button" id="newGameButton">🔄 New Game</button>
+                    <button class="add-player-button" id="addPlayerButton">➕ Add Player</button>
+                    <button class="edit-cards-button" id="editCardsButton">📝 Edit Cards</button>
                 </div>
 
                 <div class="game-rules">
@@ -226,6 +226,37 @@
                 <div class="modal-actions">
                     <button class="modal-button success" id="evidenceYes">✅ I have evidence</button>
                     <button class="modal-button danger" id="evidenceNo">❌ No evidence</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Player Name Edit Modal -->
+        <div class="player-edit-modal" id="playerEditModal" style="display: none;">
+            <div class="modal-content">
+                <h3>Edit Player Name</h3>
+                <input type="text" id="playerNameInput" class="player-name-input" placeholder="Enter player name">
+                <div class="modal-actions">
+                    <button class="modal-button success" id="savePlayerName">💾 Save</button>
+                    <button class="modal-button danger" id="cancelPlayerEdit">❌ Cancel</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card Edit Modal -->
+        <div class="card-edit-modal" id="cardEditModal" style="display: none;">
+            <div class="modal-content large">
+                <h3>Edit Scenario Cards</h3>
+                <div class="card-edit-tabs">
+                    <button class="tab-button active" data-tab="ladder">🪜 Ladder Cards</button>
+                    <button class="tab-button" data-tab="antivenom">🐍💉 Anti-Venom Cards</button>
+                </div>
+                <div class="card-edit-content">
+                    <div class="card-edit-list" id="cardEditList"></div>
+                    <button class="add-card-button" id="addNewCard">➕ Add New Card</button>
+                </div>
+                <div class="modal-actions">
+                    <button class="modal-button success" id="saveCards">💾 Save Changes</button>
+                    <button class="modal-button danger" id="cancelCardEdit">❌ Cancel</button>
                 </div>
             </div>
         </div>

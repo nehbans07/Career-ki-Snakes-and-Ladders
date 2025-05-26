@@ -9,12 +9,14 @@ let gameState = {
     snakePositions: [16, 47, 62, 64, 87, 93, 95, 98],
     ladderPositions: [1, 4, 9, 21, 28, 36, 51, 71, 80],
     currentScenario: null,
-    usedScenarios: {}
+    usedScenarios: {},
+    editingPlayer: null,
+    currentTab: 'ladder'
 };
 
-// Player tokens and names
+// Player tokens and default names
 const playerTokens = ['🔵', '🟡', '🔴', '🟢'];
-const playerNames = ['Player 1', 'Player 2', 'Player 3', 'Player 4'];
+const defaultPlayerNames = ['Player 1', 'Player 2', 'Player 3', 'Player 4'];
 
 // Analytics helper function
 function safeTrackEvent(eventName, parameters = {}) {
@@ -30,8 +32,8 @@ function safeTrackEvent(eventName, parameters = {}) {
     }
 }
 
-// Ladder Scenarios (Career Growth Actions)
-const ladderScenarios = [
+// Ladder Scenarios (Career Growth Actions) - Now editable
+let ladderScenarios = [
     {
         id: 1,
         title: "LinkedIn Showoff",
@@ -124,8 +126,8 @@ const ladderScenarios = [
     }
 ];
 
-// Anti-Venom Scenarios (Preventive Actions)
-const antivenomScenarios = [
+// Anti-Venom Scenarios (Preventive Actions) - Now editable
+let antivenomScenarios = [
     {
         id: 1,
         title: "LinkedIn Showoff",
@@ -292,8 +294,8 @@ function getBoardNumber(index) {
 // Initialize players
 function initializePlayers() {
     gameState.players = [
-        { name: playerNames[0], token: playerTokens[0], position: 0 },
-        { name: playerNames[1], token: playerTokens[1], position: 0 }
+        { name: defaultPlayerNames[0], token: playerTokens[0], position: 0 },
+        { name: defaultPlayerNames[1], token: playerTokens[1], position: 0 }
     ];
     gameState.currentPlayerIndex = 0;
     gameState.isGameActive = true;
@@ -353,13 +355,13 @@ function addPlayer() {
     
     const newPlayerIndex = gameState.players.length;
     gameState.players.push({
-        name: playerNames[newPlayerIndex],
+        name: defaultPlayerNames[newPlayerIndex],
         token: playerTokens[newPlayerIndex],
         position: 0
     });
     
     updateUI();
-    showMessage(`${playerNames[newPlayerIndex]} joined the game!`);
+    showMessage(`${defaultPlayerNames[newPlayerIndex]} joined the game!`);
     
     // Track player addition
     if (window.gameAnalytics) {
@@ -374,7 +376,7 @@ function updateUI() {
     updateBoard();
 }
 
-// Update players list
+// Update players list with edit functionality
 function updatePlayersList() {
     const playersList = document.getElementById('playersList');
     playersList.innerHTML = '';
@@ -382,15 +384,141 @@ function updatePlayersList() {
     gameState.players.forEach((player, index) => {
         const playerDiv = document.createElement('div');
         playerDiv.className = `player-info ${index === gameState.currentPlayerIndex ? 'current' : ''}`;
+        playerDiv.dataset.playerIndex = index;
         
         playerDiv.innerHTML = `
             <span class="player-token">${player.token}</span>
             <span class="player-name">${player.name}</span>
             <span class="player-position">Position: ${player.position}</span>
+            <span class="edit-player-icon">✏️</span>
         `;
+        
+        // Add click event for editing player name
+        playerDiv.addEventListener('click', () => editPlayerName(index));
         
         playersList.appendChild(playerDiv);
     });
+}
+
+// Edit player name
+function editPlayerName(playerIndex) {
+    gameState.editingPlayer = playerIndex;
+    const player = gameState.players[playerIndex];
+    
+    const modal = document.getElementById('playerEditModal');
+    const input = document.getElementById('playerNameInput');
+    
+    input.value = player.name;
+    modal.style.display = 'flex';
+    
+    // Focus on input
+    setTimeout(() => input.focus(), 100);
+}
+
+// Save player name
+function savePlayerName() {
+    const input = document.getElementById('playerNameInput');
+    const newName = input.value.trim();
+    
+    if (newName && gameState.editingPlayer !== null) {
+        gameState.players[gameState.editingPlayer].name = newName;
+        updateUI();
+        showMessage(`Player name updated to ${newName}!`);
+    }
+    
+    closePlayerEditModal();
+}
+
+// Close player edit modal
+function closePlayerEditModal() {
+    const modal = document.getElementById('playerEditModal');
+    modal.style.display = 'none';
+    gameState.editingPlayer = null;
+}
+
+// Open card edit modal
+function openCardEditModal() {
+    const modal = document.getElementById('cardEditModal');
+    modal.style.display = 'flex';
+    
+    // Show ladder cards by default
+    gameState.currentTab = 'ladder';
+    updateCardEditList();
+}
+
+// Update card edit list
+function updateCardEditList() {
+    const list = document.getElementById('cardEditList');
+    list.innerHTML = '';
+    
+    const scenarios = gameState.currentTab === 'ladder' ? ladderScenarios : antivenomScenarios;
+    
+    scenarios.forEach((scenario, index) => {
+        const item = document.createElement('div');
+        item.className = 'card-edit-item';
+        
+        item.innerHTML = `
+            <input type="text" value="${scenario.title}" placeholder="Card Title" data-field="title" data-index="${index}">
+            <textarea placeholder="Description" data-field="description" data-index="${index}">${scenario.description}</textarea>
+            <textarea placeholder="Evidence Required" data-field="evidence" data-index="${index}">${scenario.evidence}</textarea>
+            <button class="delete-card-button" onclick="deleteCard('${gameState.currentTab}', ${index})">🗑️ Delete</button>
+        `;
+        
+        list.appendChild(item);
+    });
+}
+
+// Add new card
+function addNewCard() {
+    const scenarios = gameState.currentTab === 'ladder' ? ladderScenarios : antivenomScenarios;
+    const newId = Math.max(...scenarios.map(s => s.id), 0) + 1;
+    
+    scenarios.push({
+        id: newId,
+        title: "New Scenario",
+        description: "Enter description here",
+        evidence: "Evidence: Enter evidence requirements"
+    });
+    
+    updateCardEditList();
+}
+
+// Delete card
+function deleteCard(type, index) {
+    const scenarios = type === 'ladder' ? ladderScenarios : antivenomScenarios;
+    
+    if (scenarios.length > 5) { // Keep minimum 5 cards
+        scenarios.splice(index, 1);
+        updateCardEditList();
+    } else {
+        showMessage('Minimum 5 cards required!');
+    }
+}
+
+// Save card changes
+function saveCardChanges() {
+    const inputs = document.querySelectorAll('#cardEditList input, #cardEditList textarea');
+    
+    inputs.forEach(input => {
+        const field = input.dataset.field;
+        const index = parseInt(input.dataset.index);
+        const scenarios = gameState.currentTab === 'ladder' ? ladderScenarios : antivenomScenarios;
+        
+        if (scenarios[index]) {
+            scenarios[index][field] = input.value;
+        }
+    });
+    
+    // Refresh the card displays
+    createCards();
+    closeCardEditModal();
+    showMessage('Cards updated successfully!');
+}
+
+// Close card edit modal
+function closeCardEditModal() {
+    const modal = document.getElementById('cardEditModal');
+    modal.style.display = 'none';
 }
 
 // Update current player display
@@ -854,13 +982,40 @@ function bindEvents() {
     document.getElementById('newGameButton').addEventListener('click', newGame);
     document.getElementById('addPlayerButton').addEventListener('click', addPlayer);
     document.getElementById('startTimerButton').addEventListener('click', startTimer);
+    document.getElementById('editCardsButton').addEventListener('click', openCardEditModal);
     
     // Evidence buttons
     document.getElementById('showEvidenceButton').addEventListener('click', () => handleEvidence(true));
     document.getElementById('noEvidenceButton').addEventListener('click', () => handleEvidence(false));
     
+    // Player edit modal
+    document.getElementById('savePlayerName').addEventListener('click', savePlayerName);
+    document.getElementById('cancelPlayerEdit').addEventListener('click', closePlayerEditModal);
+    
+    // Card edit modal
+    document.getElementById('saveCards').addEventListener('click', saveCardChanges);
+    document.getElementById('cancelCardEdit').addEventListener('click', closeCardEditModal);
+    document.getElementById('addNewCard').addEventListener('click', addNewCard);
+    
+    // Tab switching
+    document.querySelectorAll('.tab-button').forEach(button => {
+        button.addEventListener('click', (e) => {
+            document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+            e.target.classList.add('active');
+            gameState.currentTab = e.target.dataset.tab;
+            updateCardEditList();
+        });
+    });
+    
     // Allow dice click to roll
     document.getElementById('dice').addEventListener('click', rollDice);
+    
+    // Enter key on player name input
+    document.getElementById('playerNameInput').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            savePlayerName();
+        }
+    });
     
     // Keyboard support
     document.addEventListener('keydown', (e) => {
@@ -883,6 +1038,9 @@ function bindEvents() {
         }
     });
 }
+
+// Make deleteCard function global for onclick
+window.deleteCard = deleteCard;
 
 // Initialize game when page loads
 document.addEventListener('DOMContentLoaded', initGame); 

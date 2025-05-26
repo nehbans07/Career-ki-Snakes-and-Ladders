@@ -20,53 +20,59 @@ body {
     min-height: 100vh;
 }
 
-/* Header Styles */
+/* Header Styles - Reduced spacing */
 .game-header {
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
     background: rgba(255, 255, 255, 0.95);
-    padding: 25px;
+    padding: 20px;
     border-radius: 20px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 
+.game-header.compact {
+    padding: 15px 20px;
+    margin-bottom: 15px;
+}
+
 .game-title {
     font-family: 'Poppins', sans-serif;
-    font-size: 2.5rem;
+    font-size: 2.2rem;
     font-weight: 700;
     color: #2d3436;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
 }
 
 .game-subtitle {
-    font-size: 1.1rem;
+    font-size: 1rem;
     color: #636e72;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     font-weight: 500;
 }
 
 .game-stats {
     display: flex;
     justify-content: center;
-    gap: 30px;
+    gap: 20px;
     flex-wrap: wrap;
 }
 
 .stat {
     background: linear-gradient(135deg, #74b9ff, #0984e3);
     color: white;
-    padding: 8px 16px;
+    padding: 6px 14px;
     border-radius: 25px;
     font-weight: 600;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
 }
 
-/* Game Content Layout */
+/* Game Content Layout - Board on left, dice on right */
 .game-content {
     display: grid;
-    grid-template-columns: 1fr 400px;
-    gap: 30px;
-    margin-bottom: 30px;
+    grid-template-columns: auto 400px;
+    gap: 25px;
+    margin-bottom: 25px;
+    align-items: start;
 }
 
 /* Game Board Section */
@@ -159,22 +165,25 @@ body {
     filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
 }
 
-/* Game Controls */
-.game-controls {
-    display: flex;
-    gap: 30px;
-    align-items: center;
+/* Dice Section - Now at the top of sidebar */
+.dice-section {
+    background: linear-gradient(135deg, #ffeaa7, #fdcb6e);
+    padding: 20px;
+    border-radius: 15px;
+    text-align: center;
+    margin-bottom: 20px;
 }
 
-.dice-section {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 15px;
+.dice-section h3 {
+    color: #2d3436;
+    margin-bottom: 15px;
+    font-weight: 700;
+    font-size: 1.2rem;
 }
 
 .dice-container {
     text-align: center;
+    margin-bottom: 15px;
 }
 
 .dice {
@@ -204,6 +213,7 @@ body {
 }
 
 .roll-button {
+    width: 100%;
     padding: 12px 24px;
     background: linear-gradient(135deg, #00b894, #00cec9);
     color: white;
@@ -220,49 +230,21 @@ body {
     box-shadow: 0 8px 20px rgba(0, 184, 148, 0.4);
 }
 
-.control-buttons {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.new-game-button, .add-player-button, .timer-button {
-    padding: 12px 20px;
-    border: none;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-size: 0.95rem;
-}
-
-.new-game-button {
-    background: linear-gradient(135deg, #fd79a8, #e84393);
-    color: white;
-}
-
-.add-player-button {
-    background: linear-gradient(135deg, #fdcb6e, #e17055);
-    color: white;
-}
-
-.timer-button {
-    background: linear-gradient(135deg, #6c5ce7, #a29bfe);
-    color: white;
-}
-
-.new-game-button:hover, .add-player-button:hover, .timer-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+.roll-button:disabled {
+    background: #ddd;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
 }
 
 /* Sidebar Styles */
 .game-sidebar {
     background: rgba(255, 255, 255, 0.95);
     border-radius: 20px;
-    padding: 25px;
+    padding: 0;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
     height: fit-content;
+    overflow: hidden;
 }
 
 .game-sidebar h3 {
@@ -272,18 +254,20 @@ body {
     font-size: 1.1rem;
 }
 
-.game-sidebar > div {
-    margin-bottom: 25px;
-    padding-bottom: 20px;
+.game-sidebar > div:not(.dice-section) {
+    padding: 20px;
     border-bottom: 2px solid #f1f2f6;
 }
 
 .game-sidebar > div:last-child {
     border-bottom: none;
-    margin-bottom: 0;
 }
 
 /* Timer Section */
+.timer-section {
+    background: #f8f9fa;
+}
+
 .timer {
     font-size: 2rem;
     font-weight: 700;
@@ -295,9 +279,18 @@ body {
 
 .timer-button {
     width: 100%;
+    padding: 10px 20px;
+    background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.95rem;
 }
 
-/* Players Section */
+/* Players Section with Edit Feature */
 .players-list {
     display: flex;
     flex-direction: column;
@@ -313,6 +306,12 @@ body {
     border-radius: 10px;
     border: 2px solid transparent;
     transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+}
+
+.player-info:hover {
+    background: #e3f2fd;
 }
 
 .player-info.current {
@@ -328,13 +327,27 @@ body {
 .player-name {
     font-weight: 600;
     color: #2d3436;
+    flex: 1;
 }
 
 .player-position {
-    margin-left: auto;
     font-size: 0.9rem;
     color: #636e72;
     font-weight: 600;
+}
+
+.edit-player-icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.9rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.player-info:hover .edit-player-icon {
+    opacity: 1;
 }
 
 /* Current Player Section */
@@ -390,6 +403,43 @@ body {
 .no-evidence-button {
     background: linear-gradient(135deg, #e17055, #d63031);
     color: white;
+}
+
+/* Game Controls */
+.game-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.new-game-button, .add-player-button, .edit-cards-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.95rem;
+}
+
+.new-game-button {
+    background: linear-gradient(135deg, #fd79a8, #e84393);
+    color: white;
+}
+
+.add-player-button {
+    background: linear-gradient(135deg, #fdcb6e, #e17055);
+    color: white;
+}
+
+.edit-cards-button {
+    background: linear-gradient(135deg, #a29bfe, #6c5ce7);
+    color: white;
+}
+
+.new-game-button:hover, .add-player-button:hover, .edit-cards-button:hover, .timer-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
 /* Game Rules */
@@ -479,8 +529,8 @@ body {
     font-size: 0.85rem;
 }
 
-/* Evidence Modal */
-.evidence-modal {
+/* Modals */
+.evidence-modal, .player-edit-modal, .card-edit-modal {
     position: fixed;
     top: 0;
     left: 0;
@@ -501,6 +551,12 @@ body {
     width: 90%;
     text-align: center;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.modal-content.large {
+    max-width: 800px;
+    max-height: 80vh;
+    overflow-y: auto;
 }
 
 .modal-content h3 {
@@ -544,6 +600,96 @@ body {
 .modal-button:hover {
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Player Name Input */
+.player-name-input {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    margin-bottom: 20px;
+    transition: border-color 0.3s ease;
+}
+
+.player-name-input:focus {
+    outline: none;
+    border-color: #0984e3;
+}
+
+/* Card Edit Modal Styles */
+.card-edit-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    justify-content: center;
+}
+
+.tab-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    background: #f8f9fa;
+    color: #636e72;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.tab-button.active {
+    background: linear-gradient(135deg, #0984e3, #74b9ff);
+    color: white;
+}
+
+.card-edit-list {
+    max-height: 400px;
+    overflow-y: auto;
+    margin-bottom: 20px;
+}
+
+.card-edit-item {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    text-align: left;
+}
+
+.card-edit-item input, .card-edit-item textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 8px;
+    font-family: inherit;
+}
+
+.card-edit-item textarea {
+    resize: vertical;
+    min-height: 60px;
+}
+
+.delete-card-button {
+    background: #e74c3c;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.85rem;
+}
+
+.add-card-button {
+    width: 100%;
+    padding: 10px;
+    background: linear-gradient(135deg, #00b894, #00cec9);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 20px;
 }
 
 /* Game Messages */
@@ -599,6 +745,8 @@ body {
     
     .game-sidebar {
         order: -1;
+        max-width: 600px;
+        margin: 0 auto;
     }
     
     .board {
@@ -613,7 +761,7 @@ body {
 
 @media (max-width: 768px) {
     .game-title {
-        font-size: 2rem;
+        font-size: 1.8rem;
     }
     
     .board {
@@ -634,12 +782,12 @@ body {
     }
     
     .game-stats {
-        gap: 15px;
+        gap: 10px;
     }
     
     .stat {
-        font-size: 0.8rem;
-        padding: 6px 12px;
+        font-size: 0.75rem;
+        padding: 5px 10px;
     }
 }
 
@@ -655,11 +803,10 @@ body {
     }
     
     .game-sidebar {
-        padding: 15px;
+        padding: 0;
     }
     
-    .game-controls {
-        flex-direction: column;
-        gap: 15px;
+    .game-sidebar > div:not(.dice-section) {
+        padding: 15px;
     }
 } 
