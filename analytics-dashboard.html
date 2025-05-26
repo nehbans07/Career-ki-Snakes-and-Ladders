@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics Dashboard - Career ki Snakes and Ladders</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .dashboard-header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .dashboard-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2d3436;
+            margin-bottom: 10px;
+        }
+        
+        .dashboard-subtitle {
+            color: #636e72;
+            font-size: 1.1rem;
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .metric-card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            transition: transform 0.3s ease;
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .metric-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .metric-icon {
+            font-size: 2rem;
+            margin-right: 15px;
+        }
+        
+        .metric-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2d3436;
+        }
+        
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #0984e3;
+            margin-bottom: 10px;
+        }
+        
+        .metric-description {
+            color: #636e72;
+            font-size: 0.9rem;
+        }
+        
+        .charts-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .chart-card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .chart-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #2d3436;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .chart-placeholder {
+            height: 300px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #636e72;
+            font-size: 1.1rem;
+            text-align: center;
+        }
+        
+        .real-time-section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .real-time-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #2d3436;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .real-time-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .real-time-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .real-time-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #00b894;
+            margin-bottom: 5px;
+        }
+        
+        .real-time-label {
+            color: #636e72;
+            font-size: 0.9rem;
+        }
+        
+        .update-time {
+            text-align: center;
+            color: #636e72;
+            font-size: 0.9rem;
+            margin-top: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .charts-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .dashboard-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <header class="dashboard-header">
+            <h1 class="dashboard-title">📊 Analytics Dashboard</h1>
+            <p class="dashboard-subtitle">Career ki Snakes and Ladders - Usage Statistics</p>
+        </header>
+
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-header">
+                    <span class="metric-icon">👥</span>
+                    <h3 class="metric-title">Total Users</h3>
+                </div>
+                <div class="metric-value" id="totalUsers">-</div>
+                <p class="metric-description">Unique visitors who played the game</p>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-header">
+                    <span class="metric-icon">🎮</span>
+                    <h3 class="metric-title">Games Played</h3>
+                </div>
+                <div class="metric-value" id="gamesPlayed">-</div>
+                <p class="metric-description">Total number of game sessions started</p>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-header">
+                    <span class="metric-icon">⏱️</span>
+                    <h3 class="metric-title">Avg. Session Time</h3>
+                </div>
+                <div class="metric-value" id="avgSessionTime">-</div>
+                <p class="metric-description">Average time spent playing per session</p>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-header">
+                    <span class="metric-icon">🎯</span>
+                    <h3 class="metric-title">Completion Rate</h3>
+                </div>
+                <div class="metric-value" id="completionRate">-</div>
+                <p class="metric-description">Percentage of games completed (reached 100)</p>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-header">
+                    <span class="metric-icon">📊</span>
+                    <h3 class="metric-title">Evidence Success</h3>
+                </div>
+                <div class="metric-value" id="evidenceSuccess">-</div>
+                <p class="metric-description">Percentage of scenarios with evidence shown</p>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-header">
+                    <span class="metric-icon">🔄</span>
+                    <h3 class="metric-title">Return Users</h3>
+                </div>
+                <div class="metric-value" id="returnUsers">-</div>
+                <p class="metric-description">Users who played multiple sessions</p>
+            </div>
+        </div>
+
+        <div class="charts-section">
+            <div class="chart-card">
+                <h3 class="chart-title">📈 Daily Active Users</h3>
+                <div class="chart-placeholder">
+                    Connect to Google Analytics<br>
+                    to view daily user trends
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <h3 class="chart-title">🎲 Popular Scenarios</h3>
+                <div class="chart-placeholder">
+                    Most encountered<br>
+                    ladder and snake scenarios
+                </div>
+            </div>
+        </div>
+
+        <div class="real-time-section">
+            <h3 class="real-time-title">🔴 Real-Time Activity</h3>
+            <div class="real-time-metrics">
+                <div class="real-time-item">
+                    <div class="real-time-value" id="activeUsers">0</div>
+                    <div class="real-time-label">Active Users</div>
+                </div>
+                <div class="real-time-item">
+                    <div class="real-time-value" id="activeGames">0</div>
+                    <div class="real-time-label">Active Games</div>
+                </div>
+                <div class="real-time-item">
+                    <div class="real-time-value" id="todayUsers">0</div>
+                    <div class="real-time-label">Today's Users</div>
+                </div>
+                <div class="real-time-item">
+                    <div class="real-time-value" id="todayGames">0</div>
+                    <div class="real-time-label">Today's Games</div>
+                </div>
+            </div>
+            <div class="update-time">
+                Last updated: <span id="lastUpdate">-</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mock analytics data (replace with real Google Analytics API calls)
+        const mockAnalytics = {
+            totalUsers: 1250,
+            gamesPlayed: 3680,
+            avgSessionTime: "12:45",
+            completionRate: "68%",
+            evidenceSuccess: "74%",
+            returnUsers: "42%",
+            activeUsers: 23,
+            activeGames: 8,
+            todayUsers: 156,
+            todayGames: 89
+        };
+
+        // Simulate real-time updates
+        function updateMetrics() {
+            document.getElementById('totalUsers').textContent = mockAnalytics.totalUsers.toLocaleString();
+            document.getElementById('gamesPlayed').textContent = mockAnalytics.gamesPlayed.toLocaleString();
+            document.getElementById('avgSessionTime').textContent = mockAnalytics.avgSessionTime;
+            document.getElementById('completionRate').textContent = mockAnalytics.completionRate;
+            document.getElementById('evidenceSuccess').textContent = mockAnalytics.evidenceSuccess;
+            document.getElementById('returnUsers').textContent = mockAnalytics.returnUsers;
+            
+            // Real-time metrics with some variation
+            document.getElementById('activeUsers').textContent = mockAnalytics.activeUsers + Math.floor(Math.random() * 10 - 5);
+            document.getElementById('activeGames').textContent = mockAnalytics.activeGames + Math.floor(Math.random() * 6 - 3);
+            document.getElementById('todayUsers').textContent = mockAnalytics.todayUsers + Math.floor(Math.random() * 20);
+            document.getElementById('todayGames').textContent = mockAnalytics.todayGames + Math.floor(Math.random() * 15);
+            
+            document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString();
+        }
+
+        // Initial load
+        updateMetrics();
+
+        // Update every 30 seconds
+        setInterval(updateMetrics, 30000);
+
+        // Google Analytics Integration (uncomment and configure when ready)
+        /*
+        function loadGoogleAnalyticsData() {
+            // Use Google Analytics Reporting API
+            gapi.load('analytics', function() {
+                gapi.analytics.ready(function() {
+                    gapi.analytics.auth.authorize({
+                        'serverAuth': {
+                            'access_token': 'YOUR_ACCESS_TOKEN'
+                        }
+                    });
+
+                    var dataChart = new gapi.analytics.googleCharts.DataChart({
+                        reportType: 'ga',
+                        query: {
+                            'ids': 'ga:YOUR_VIEW_ID',
+                            'start-date': '7daysAgo',
+                            'end-date': 'today',
+                            'metrics': 'ga:sessions,ga:users'
+                        },
+                        chart: {
+                            type: 'LINE',
+                            container: 'chart-container'
+                        }
+                    });
+
+                    dataChart.execute();
+                });
+            });
+        }
+        */
+    </script>
+</body>
+</html> 

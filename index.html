@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎲 Career ki Snakes and Ladders - Job Readiness Game</title>
+    <meta name="description" content="Transform your career preparation into an engaging game! Navigate through real-life career actions and choices in this professional development Snakes and Ladders experience.">
+    <meta name="keywords" content="career development, job readiness, professional skills, career preparation, interview skills, resume building, LinkedIn optimization">
+    <meta name="author" content="Career Development Game">
+    
+    <!-- Open Graph meta tags for social sharing -->
+    <meta property="og:title" content="Career ki Snakes and Ladders - Job Readiness Game">
+    <meta property="og:description" content="Transform your career preparation into an engaging game! Practice job readiness skills through interactive gameplay.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://via.placeholder.com/1200x630/667eea/ffffff?text=Career+ki+Snakes+and+Ladders">
+    
+    <!-- Twitter Card meta tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Career ki Snakes and Ladders - Job Readiness Game">
+    <meta name="twitter:description" content="Transform your career preparation into an engaging game!">
+    <meta name="twitter:image" content="https://via.placeholder.com/1200x630/667eea/ffffff?text=Career+ki+Snakes+and+Ladders">
+    
+    <!-- Google Analytics 4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        
+        // Replace GA_MEASUREMENT_ID with your actual Google Analytics 4 measurement ID
+        gtag('config', 'GA_MEASUREMENT_ID', {
+            page_title: 'Career ki Snakes and Ladders',
+            page_location: window.location.href
+        });
+        
+        // Custom analytics function
+        function trackEvent(eventName, parameters = {}) {
+            gtag('event', eventName, {
+                custom_parameter_1: parameters.custom_parameter_1 || '',
+                custom_parameter_2: parameters.custom_parameter_2 || '',
+                custom_parameter_3: parameters.custom_parameter_3 || '',
+                value: parameters.value || 0
+            });
+        }
+        
+        // Track page load time
+        window.addEventListener('load', function() {
+            const loadTime = performance.now();
+            trackEvent('page_load_time', { value: Math.round(loadTime) });
+        });
+    </script>
+    
+    <!-- Custom Analytics for Game Metrics -->
+    <script>
+        // Game analytics object
+        window.gameAnalytics = {
+            sessionStart: Date.now(),
+            gameStart: null,
+            gamesPlayed: 0,
+            totalTimeSpent: 0,
+            scenariosEncountered: 0,
+            evidenceShown: 0,
+            evidenceMissed: 0,
+            playersAdded: 0,
+            
+            // Track game events
+            trackGameStart: function() {
+                this.gameStart = Date.now();
+                this.gamesPlayed++;
+                trackEvent('game_started', { 
+                    custom_parameter_1: 'new_game',
+                    value: this.gamesPlayed 
+                });
+            },
+            
+            trackGameEnd: function(winner) {
+                if (this.gameStart) {
+                    const gameTime = Math.round((Date.now() - this.gameStart) / 1000);
+                    this.totalTimeSpent += gameTime;
+                    trackEvent('game_completed', { 
+                        custom_parameter_1: winner,
+                        custom_parameter_2: 'completion',
+                        value: gameTime 
+                    });
+                }
+            },
+            
+            trackScenario: function(type, hasEvidence) {
+                this.scenariosEncountered++;
+                if (hasEvidence) {
+                    this.evidenceShown++;
+                } else {
+                    this.evidenceMissed++;
+                }
+                trackEvent('scenario_encountered', { 
+                    custom_parameter_1: type,
+                    custom_parameter_2: hasEvidence ? 'evidence_shown' : 'no_evidence',
+                    value: this.scenariosEncountered 
+                });
+            },
+            
+            trackPlayerAdded: function() {
+                this.playersAdded++;
+                trackEvent('player_added', { 
+                    custom_parameter_1: 'multiplayer',
+                    value: this.playersAdded 
+                });
+            },
+            
+            trackTimeSpent: function() {
+                const totalTime = Math.round((Date.now() - this.sessionStart) / 1000);
+                trackEvent('session_time', { 
+                    custom_parameter_1: 'time_spent',
+                    value: totalTime 
+                });
+            }
+        };
+        
+        // Track time spent every 30 seconds
+        setInterval(() => {
+            window.gameAnalytics.trackTimeSpent();
+        }, 30000);
+        
+        // Track when user leaves the page
+        window.addEventListener('beforeunload', function() {
+            window.gameAnalytics.trackTimeSpent();
+        });
+    </script>
+    
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="game-container">
+        <header class="game-header">
+            <h1 class="game-title">🎲 Career ki Snakes and Ladders</h1>
+            <p class="game-subtitle">Job readiness, Decision-making, and Self-reflection through gameplay</p>
+            <div class="game-stats">
+                <span class="stat">👥 4 players per board</span>
+                <span class="stat">⏰ 60 minutes</span>
+                <span class="stat">🎯 First to 100 wins!</span>
+            </div>
+        </header>
+
+        <div class="game-content">
+            <div class="game-board-section">
+                <div class="board" id="gameBoard"></div>
+                
+                <div class="game-controls">
+                    <div class="dice-section">
+                        <div class="dice-container">
+                            <div class="dice" id="dice">🎲</div>
+                            <div class="dice-value" id="diceValue">-</div>
+                        </div>
+                        <button class="roll-button" id="rollButton">🎲 Roll Dice</button>
+                    </div>
+                    
+                    <div class="control-buttons">
+                        <button class="new-game-button" id="newGameButton">🔄 New Game</button>
+                        <button class="add-player-button" id="addPlayerButton">➕ Add Player</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="game-sidebar">
+                <div class="timer-section">
+                    <h3>⏰ Game Timer</h3>
+                    <div class="timer" id="gameTimer">60:00</div>
+                    <button class="timer-button" id="startTimerButton">Start Timer</button>
+                </div>
+
+                <div class="players-section">
+                    <h3>👥 Players</h3>
+                    <div class="players-list" id="playersList"></div>
+                </div>
+
+                <div class="current-player-section">
+                    <h3>🎯 Current Turn</h3>
+                    <div class="current-player" id="currentPlayer">
+                        <span class="player-token">🔵</span>
+                        <span class="player-name">Player 1</span>
+                    </div>
+                </div>
+
+                <div class="scenario-section">
+                    <h3>📋 Active Scenario</h3>
+                    <div class="scenario-display" id="scenarioDisplay">
+                        <p class="scenario-text">Roll the dice to start playing!</p>
+                        <div class="scenario-actions" id="scenarioActions" style="display: none;">
+                            <button class="evidence-button" id="showEvidenceButton">✅ Show Evidence</button>
+                            <button class="no-evidence-button" id="noEvidenceButton">❌ No Evidence</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="game-rules">
+                    <h3>📖 How to Play</h3>
+                    <ul>
+                        <li>🪜 <strong>Ladder:</strong> Show evidence to climb up!</li>
+                        <li>🐍 <strong>Snake:</strong> Show anti-venom evidence to avoid sliding down!</li>
+                        <li>🎯 <strong>Goal:</strong> First to reach 100 wins!</li>
+                        <li>⏰ <strong>Time Limit:</strong> 60 minutes</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="cards-section">
+            <div class="ladder-cards">
+                <h3>🪜 Ladder Scenarios</h3>
+                <div class="cards-container" id="ladderCards"></div>
+            </div>
+            
+            <div class="antivenom-cards">
+                <h3>🐍💉 Anti-Snake Venom Cards</h3>
+                <div class="cards-container" id="antivenomCards"></div>
+            </div>
+        </div>
+
+        <div class="game-message" id="gameMessage"></div>
+        
+        <div class="evidence-modal" id="evidenceModal" style="display: none;">
+            <div class="modal-content">
+                <h3>Evidence Required</h3>
+                <p id="evidenceText"></p>
+                <div class="modal-actions">
+                    <button class="modal-button success" id="evidenceYes">✅ I have evidence</button>
+                    <button class="modal-button danger" id="evidenceNo">❌ No evidence</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html> 
